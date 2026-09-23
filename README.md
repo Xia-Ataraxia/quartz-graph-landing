@@ -1,20 +1,33 @@
-# graph-landing
+# Quartz Graph Landing
+
+A Quartz v5 plugin that adds a locale home page type rendering a full-viewport knowledge-graph constellation.
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![Release](https://img.shields.io/github/v/release/Xia-Ataraxia/quartz-graph-landing)](https://github.com/Xia-Ataraxia/quartz-graph-landing/releases/latest)
+
+## Features
+
+- Full-viewport graph landing page (`pageType`) built from Quartz's content index.
+- Reads stock `contentIndex.json` by default, or a custom `graphIndex.json` (`indexSource`).
+- Optional tag co-occurrence edges, node caps, neighborhood expansion, layout, level-of-detail, and interaction options (see [Options](#options)).
+- 2D/3D rendering modes (`renderMode`) with performance-oriented LOD settings.
 
 Full-viewport knowledge-graph constellation page type. All options are
 optional and default to the plugin's original behavior — setting none of
 them reproduces the exact output of a plugin instance with no `options`
 block at all.
 
-## Install
+## Installation
+
+Add the plugin to your Quartz v5 plugin configuration:
 
 ```yaml
-- source: github:GoBeromsu/quartz-graph-landing
+- source: github:Xia-Ataraxia/quartz-graph-landing
   enabled: true
   options:
     indexSource: contentIndex
 ```
 
-## Requirements
+### Requirements
 
 - `indexSource: "contentIndex"` (the default) works out of the box with
   stock Quartz v5's built-in content index emitter — no other plugin
@@ -59,7 +72,9 @@ block at all.
   read the flag, both fetches simply happen — content still loads
   correctly, just via one extra (unused) network request.
 
-## Options
+## Usage
+
+### Options
 
 ```yaml
 - source: ./plugins/graph-landing
@@ -92,7 +107,7 @@ block at all.
     defaultLocale: en
 ```
 
-### `indexSource`
+#### `indexSource`
 
 `"contentIndex"` (default) or `"graphIndex"`. Controls which JSON file the
 client script fetches to build the graph. `"graphIndex"` requires the
@@ -100,7 +115,7 @@ client script fetches to build the graph. `"graphIndex"` requires the
 fetches the lighter `static/graphIndex.json` instead of the full
 `static/contentIndex.json`.
 
-### `tagCooccurrence`
+#### `tagCooccurrence`
 
 Caps the O(k²) tag co-occurrence edge generation in the client graph
 builder (every pair of tags on a note otherwise gets a faint co-occurrence
@@ -116,7 +131,7 @@ edge).
     in their existing array order, tag pairs within a note in `i, j`
     nested-loop order, so the same cap always produces the same edge set.
 
-### `maxRenderedNodes`
+#### `maxRenderedNodes`
 
 Caps how many nodes the graph renders initially to the top-N nodes by
 degree, computed over the full parsed index (ties broken by slug for
@@ -132,14 +147,14 @@ external).
   isn't in the rendered set yet expands it (and its hop neighborhood) into
   the simulation first, then focuses it.
 
-### `expandHops`
+#### `expandHops`
 
 Number of hops to pull in from the full index when a rendered node is
 clicked and `maxRenderedNodes` is set.
 
 - Default: `1`. Has no effect unless `maxRenderedNodes` is also set.
 
-### `renderMode`
+#### `renderMode`
 
 Which client renderer to use.
 
@@ -151,7 +166,7 @@ Which client renderer to use.
   notice via the existing canvas-message path instead of silently
   loading 2D.
 
-### `layout`
+#### `layout`
 
 Tunes the force-simulation warmup/settle behavior. Default: `undefined` —
 original behavior unchanged (3D: `warmupTicks` 50 / `cooldownTicks` 200;
@@ -181,7 +196,7 @@ d3-force's built-in default).
   visible graph and still get a full warmup. Default: `false` — current
   behavior unchanged (every expand re-warms the whole graph).
 
-### `lod`
+#### `lod`
 
 Camera-distance level-of-detail tuning for the 3D renderer. Default:
 `undefined` — original behavior unchanged (every node/link renders at
@@ -227,7 +242,7 @@ fog). Has no effect when the 2D renderer is active.
   simply repopulates the cache from scratch. See `interaction` below for
   how this interacts with `incrementalRepaint`.
 
-### `interaction`
+#### `interaction`
 
 Interaction-driven repaint tuning for the 3D renderer. Default: `undefined`
 — original behavior unchanged (every hover/click triggers a full accessor
@@ -257,7 +272,7 @@ leaving every other link sharing the old material untouched. When
 `shareLinkResources` is off, each link privately owns its material, so
 `incrementalRepaint` mutates it in place as before.
 
-### `ambientVideoId`
+#### `ambientVideoId`
 
 YouTube video id for the ambient audio track played behind the graph
 (toggled by the audio button in the controls rail).
@@ -270,7 +285,7 @@ YouTube video id for the ambient audio track played behind the graph
   An unset or invalid value (empty, too short/long, a full URL, disallowed
   characters) is ignored and the built-in track plays instead.
 
-### `defaultLocale`
+#### `defaultLocale`
 
 Fallback locale id used when a page's locale can't be determined from its
 multilingual frontmatter/slug prefix, and when the site's multilingual
@@ -280,7 +295,7 @@ config has no `sourceLocale` set.
 - Set this when publishing a site whose primary locale is not Korean (e.g.
   `defaultLocale: en`).
 
-## 3D performance
+### 3D performance
 
 The 3D renderer instantiates one `THREE.Mesh` per node and one per link,
 each with its own `Geometry`/`Material` (no sharing/caching by default) —
@@ -303,3 +318,20 @@ folder/co-occurrence edges are included). `lod.nodeResolution` /
 `lod.linkResolution` trade visual smoothness for fewer triangles per mesh
 on top of either. All of these are independent and additive; none change
 rendered behavior unless explicitly set.
+
+## Development
+
+npm package name: `graph-landing` (ESM, built with tsup; `preact` is a peer dependency).
+
+```bash
+npm install
+npm run build      # tsup -> dist/
+npm run dev        # tsup --watch
+npm run typecheck  # tsc --noEmit
+```
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
+
+## License
+
+[MIT](LICENSE)

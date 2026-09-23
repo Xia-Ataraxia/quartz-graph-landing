@@ -10,13 +10,13 @@
     "3d",
     "visualization"
   ],
-  "homepage": "https://github.com/GoBeromsu/quartz-graph-landing#readme",
+  "homepage": "https://github.com/Xia-Ataraxia/quartz-graph-landing#readme",
   "bugs": {
-    "url": "https://github.com/GoBeromsu/quartz-graph-landing/issues"
+    "url": "https://github.com/Xia-Ataraxia/quartz-graph-landing/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/GoBeromsu/quartz-graph-landing"
+    "url": "https://github.com/Xia-Ataraxia/quartz-graph-landing"
   },
   "author": "GoBeromsu",
   "type": "module",
